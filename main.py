@@ -54,4 +54,5 @@ def convert_message(message: Message):
        bot.reply_to(message, f"Цена {base} в {quote} в количестве {amount} равна {value}")
 
 
-bot.polling()
+if __name__ == "__main__"":
+    bot.polling()
