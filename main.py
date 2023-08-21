@@ -1,10 +1,9 @@
 from telebot import TeleBot
 from telebot.types import Message
-from decouple import config
-from settings import CURRRENCIES
+from settings import CURRRENCIES, BOT_TOKEN
 from extensions import CurrensyConverter, APIException
 
-bot = TeleBot(token=config("BOT_TOKEN", default="NOT_FOUND"))
+bot = TeleBot(token=BOT_TOKEN)
 converter = CurrensyConverter()
 
 

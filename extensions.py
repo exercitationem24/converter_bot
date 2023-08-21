@@ -1,6 +1,5 @@
 from requests import get
-from decouple import config
-from settings import API_URL, CURRRENCIES
+from settings import API_URL, CURRRENCIES, API_KEY
 import json
 
 
@@ -14,7 +13,6 @@ class CurrensyConverter:
     @staticmethod
     def get_price(base: str, quote: str, amount: float) -> float:
         """Метод для перевода валюты"""
-        apikey = config("API_KEY", default="NOT_FOUND")
         base, quote = base.upper(), quote.upper()
         if base not in CURRRENCIES.values() and base.lower() not in CURRRENCIES.keys():
             raise APIException("Валюта base отсутствует в списке допустимых валют!")
@@ -30,6 +28,6 @@ class CurrensyConverter:
             raise APIException("Сумма для перевода не является числом!")
         if amount < 0:
             raise APIException("Вы пытаетесь перевести отрицательное число валюты!")
-        responce = get(API_URL, params={"apikey": apikey, "base_currency": base, "currencies": quote})
+        responce = get(API_URL, params={"apikey": API_KEY, "base_currency": base, "currencies": quote})
         data = json.loads(responce.content)
         return round(data["data"][quote] * amount, 4)
