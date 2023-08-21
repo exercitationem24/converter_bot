@@ -3,7 +3,6 @@ from telebot.types import Message
 from decouple import config
 from settings import CURRRENCIES
 from extensions import CurrensyConverter, APIException
-from background import keep_alive
 
 bot = TeleBot(token=config("BOT_TOKEN", default="NOT_FOUND"))
 converter = CurrensyConverter()
@@ -55,6 +54,5 @@ def convert_message(message: Message):
        bot.reply_to(message, f"Цена {base} в {quote} в количестве {amount} равна {value}")
 
 
-#keep_alive()
 if __name__ == "__main__":
     bot.polling()
