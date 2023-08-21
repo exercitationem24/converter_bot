@@ -3,6 +3,7 @@ from telebot.types import Message
 from decouple import config
 from settings import CURRRENCIES
 from extensions import CurrensyConverter, APIException
+from background import keep_alive
 
 bot = TeleBot(token=config("BOT_TOKEN", default="NOT_FOUND"))
 converter = CurrensyConverter()
@@ -37,14 +38,14 @@ def get_values_message(message: Message):
     bot.send_message(message.chat.id, msg_text + all_currencies)
 
 
-@bot.message_handler(commands=["convert"])
+@bot.message_handler(content_types=['text'])
 def convert_message(message: Message):
     """Осуществляет перевод валюты и выводит результат"""
     try:
         args = message.text.split()
-        if len(args) != 4: # команда тоже считается аргументом, поэтому всего 4
+        if len(args) != 3:
             raise APIException("Количество аргументов не равно трем!") 
-        _, base, quote, amount = args
+        base, quote, amount = args
         value = converter.get_price(base, quote, amount)
     except APIException as apiexc:
        bot.reply_to(message, apiexc)
@@ -54,5 +55,6 @@ def convert_message(message: Message):
        bot.reply_to(message, f"Цена {base} в {quote} в количестве {amount} равна {value}")
 
 
+keep_alive()
 if __name__ == "__main__":
     bot.polling()
